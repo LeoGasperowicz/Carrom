@@ -1,0 +1,63 @@
+﻿<Window x:Class="Carrom.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Carrom"
+        mc:Ignorable="d"
+        Title="Carrom Game" Height="800" Width="1500">
+    <Grid>
+        <!-- Starter Image -->
+        <Image Source="/Carrom Start Image.jpg" Stretch="UniformToFill" />
+        <Canvas>
+
+            <Button Click="PlayButton_Click" Canvas.Left="512" Canvas.Top="529" Height="162" Width="390">
+                <Image x:Name="GameImage" Source="/Play_Buttton.jpg" Width="374">
+                    <Image.RenderTransform>
+                        <ScaleTransform x:Name="imageScaleTransform" ScaleX="1" ScaleY="1"/>
+                    </Image.RenderTransform>
+                </Image>
+                <Button.Triggers>
+                    <EventTrigger RoutedEvent="Button.MouseEnter">
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetName="imageScaleTransform" 
+                                     Storyboard.TargetProperty="ScaleX" 
+                                     To="1.1" Duration="0:0:0.2"/>
+                                <DoubleAnimation Storyboard.TargetName="imageScaleTransform" 
+                                     Storyboard.TargetProperty="ScaleY" 
+                                     To="1.1" Duration="0:0:0.2"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                    <EventTrigger RoutedEvent="Button.MouseLeave">
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetName="imageScaleTransform" 
+                                     Storyboard.TargetProperty="ScaleX" 
+                                     To="1" Duration="0:0:0.2"/>
+                                <DoubleAnimation Storyboard.TargetName="imageScaleTransform" 
+                                     Storyboard.TargetProperty="ScaleY" 
+                                     To="1" Duration="0:0:0.2"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Button.Triggers>
+            </Button>
+
+            <!-- Configuration of the players -->
+            <Grid x:Name="ConfigGrid" Visibility="Collapsed">
+                <!-- Configuration Image -->
+                <Image Stretch="UniformToFill" Source="/Configuration picture.jpg"/>
+
+                <!-- TextBoxes and Start Game Button -->
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBox x:Name="Player1TextBox" Height="25" Width="121"/>
+                    <TextBox x:Name="Player2TextBox" Margin="0,10" TextChanged="Player2TextBox_TextChanged" Height="23" Width="140"/>
+                    <Button Content="Start the game" Click="StartGameButton_Click"/>
+                </StackPanel>
+            </Grid>
+        </Canvas>
+    </Grid>
+    
+</Window>

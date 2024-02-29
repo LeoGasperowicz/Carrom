@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33424.131
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Carrom", "Carrom\Carrom.csproj", "{33CAC7BD-A1E6-4624-8ACE-187E7DADE708}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{33CAC7BD-A1E6-4624-8ACE-187E7DADE708}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33CAC7BD-A1E6-4624-8ACE-187E7DADE708}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33CAC7BD-A1E6-4624-8ACE-187E7DADE708}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33CAC7BD-A1E6-4624-8ACE-187E7DADE708}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4FF39B04-20D7-4BB3-AACB-9887C63F49A7}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net7.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Carrom Board.jpg" />
+    <None Remove="Carrom Start Image.jpg" />
+    <None Remove="Configuration picture.jpg" />
+    <None Remove="Play_Buttton.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Carrom Board.jpg" />
+    <Resource Include="Carrom Start Image.jpg" />
+    <Resource Include="Configuration picture.jpg" />
+    <Resource Include="Play_Buttton.jpg" />
+  </ItemGroup>
+
+</Project>
