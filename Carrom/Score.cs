@@ -26,7 +26,18 @@ namespace Carrom
             {
                 this.scores[playerId]++;
             }
-
+        }
+        public int GetScoreById(int playerId)
+        {
+            if (playerId >= 0 && playerId < scores.Count)
+            {
+                return scores[playerId];
+            }
+            else
+            {
+                // Return 0 if the ID of the player isn't valid
+                return 0;
+            }
         }
 
     }

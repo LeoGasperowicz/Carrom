@@ -11,14 +11,22 @@
     <None Remove="Carrom Board.jpg" />
     <None Remove="Carrom Start Image.jpg" />
     <None Remove="Configuration picture.jpg" />
+    <None Remove="Configuration_picture.jpg" />
+    <None Remove="Pictures\Carrom Board.jpg" />
     <None Remove="Play_Buttton.jpg" />
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Carrom Board.jpg" />
-    <Resource Include="Carrom Start Image.jpg" />
-    <Resource Include="Configuration picture.jpg" />
-    <Resource Include="Play_Buttton.jpg" />
+    <PackageReference Include="MySql.Data" Version="8.3.0" />
+    <PackageReference Include="Npgsql" Version="8.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Pictures\Configuration_picture.jpg" />
+    <Resource Include="Pictures\Carrom Board.jpg" />
+    <Resource Include="Pictures\Carrom Start Image.jpg" />
+    <Resource Include="Pictures\Configuration picture.jpg" />
+    <Resource Include="Pictures\Play_Buttton.jpg" />
   </ItemGroup>
 
 </Project>

@@ -8,10 +8,15 @@ namespace Carrom
 {
     public class Player
     {
-        public int id { get; }
+        public int id { get; set; }
         public string name { get; set; }
         public List<CarromPiece> pieces { get; set; }
 
+
+        public Player(string name)
+        {
+            this.name = name;
+        }
         public Player(int id, string name, List<CarromPiece> pieces)
         {
             this.id = id;

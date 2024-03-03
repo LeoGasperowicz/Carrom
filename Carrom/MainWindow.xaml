@@ -8,11 +8,11 @@
         Title="Carrom Game" Height="800" Width="1500">
     <Grid>
         <!-- Starter Image -->
-        <Image Source="/Carrom Start Image.jpg" Stretch="UniformToFill" />
+        <Image x:Name="StarterImage" Source="/Pictures/Carrom Start Image.jpg" Stretch="UniformToFill" />
         <Canvas>
 
-            <Button Click="PlayButton_Click" Canvas.Left="512" Canvas.Top="529" Height="162" Width="390">
-                <Image x:Name="GameImage" Source="/Play_Buttton.jpg" Width="374">
+            <Button x:Name="PlayButton" Click="PlayButtonClick" Canvas.Left="577" Canvas.Top="529" Height="162" Width="325" HorizontalAlignment="Left" VerticalAlignment="Center">
+                <Image x:Name="GameImage" Source="/Pictures/Play_Buttton.jpg" Width="374">
                     <Image.RenderTransform>
                         <ScaleTransform x:Name="imageScaleTransform" ScaleX="1" ScaleY="1"/>
                     </Image.RenderTransform>
@@ -46,18 +46,44 @@
             </Button>
 
             <!-- Configuration of the players -->
-            <Grid x:Name="ConfigGrid" Visibility="Collapsed">
+            <Grid x:Name="ConfigGrid" Visibility="Collapsed" HorizontalAlignment="Center" Height="800" VerticalAlignment="Center" Width="1500">
                 <!-- Configuration Image -->
-                <Image Stretch="UniformToFill" Source="/Configuration picture.jpg"/>
+                <Image Stretch="UniformToFill" Source="/Pictures/Configuration_picture.jpg"/>
 
                 <!-- TextBoxes and Start Game Button -->
-                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <TextBox x:Name="Player1TextBox" Height="25" Width="121"/>
-                    <TextBox x:Name="Player2TextBox" Margin="0,10" TextChanged="Player2TextBox_TextChanged" Height="23" Width="140"/>
-                    <Button Content="Start the game" Click="StartGameButton_Click"/>
-                </StackPanel>
+                <Grid >
+                    <TextBox x:Name="Player1TextBox" Margin="579,352,771,423" Height="25" Width="150" 
+                         Background="Transparent" Text="Name Player 1" Foreground="Gray"  
+                         BorderBrush="Black" BorderThickness="2" FontWeight="Bold"
+                         GotFocus="Player1TextBox_GotFocus" LostFocus="Player1TextBox_LostFocus"/>
+                    <TextBox x:Name="Player2TextBox" Height="25" Width="150" 
+                         Margin="579,382,771,393" Background="Transparent" 
+                         Text="Name Player 2" Foreground="Gray" 
+                         BorderBrush="Black" BorderThickness="2" FontWeight="Bold"
+                         GotFocus="Player2TextBox_GotFocus" LostFocus="Player2TextBox_LostFocus"/>
+
+                    <TextBlock Text="Choose the database" 
+                        Margin="533,452,807,324" FontSize="16" FontWeight="Bold"/>
+
+                    <RadioButton x:Name ="MariaDBRadioButton" GroupName="DatabaseOptions" Content="MariaDB" 
+                        Margin="579,476,846,304" FontSize="14"/>
+                    <RadioButton x:Name ="PostgreSQLRadioButton" GroupName="DatabaseOptions" Content="PostgreSQL" 
+                        Margin="579,501,807,275" FontSize="14"/>
+
+
+                    <Button Content="Start the game" Click="StartGameButton_Click" Height="25" Width="150" Margin="661,603,689,172"/>
+                </Grid>
             </Grid>
+            <!-- Board of the Game-->
+            <Grid x:Name="GameGrid" Visibility="Collapsed" HorizontalAlignment="Center" Height="800" VerticalAlignment="Center" Width="1500" Background="Black">
+                <Image  Source="/Pictures/Carrom Board.jpg"/>
+                <TextBlock Text="Score : " 
+                        Margin="39,79,1301,633" FontSize="50" FontWeight="Bold" Foreground="White"/>
+                <TextBlock x:Name="Player1Score" Margin="10,195,1160,523" FontSize="30" Foreground="White"/>
+                <TextBlock x:Name="Player2Score" Margin="10,282,1160,425" FontSize="30" Foreground="White" RenderTransformOrigin="0.471,0.518"/>
+            </Grid>
+            
         </Canvas>
     </Grid>
-    
+
 </Window>
