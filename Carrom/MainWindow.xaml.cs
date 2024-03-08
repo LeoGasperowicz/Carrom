@@ -85,7 +85,7 @@ namespace Carrom
             if (tb.Text == "Name Player 1")
             {
                 tb.Text = "";
-                tb.Foreground = Brushes.Black; 
+                tb.Foreground = Brushes.Gray; 
             }
         }
 

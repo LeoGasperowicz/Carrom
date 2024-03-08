@@ -76,11 +76,14 @@
             </Grid>
             <!-- Board of the Game-->
             <Grid x:Name="GameGrid" Visibility="Collapsed" HorizontalAlignment="Center" Height="800" VerticalAlignment="Center" Width="1500" Background="Black">
-                <Image  Source="/Pictures/Carrom Board.jpg"/>
+                <Image Height="730" Width="750" Source="/Carrom_Board3.jpg"/>
                 <TextBlock Text="Score : " 
                         Margin="39,79,1301,633" FontSize="50" FontWeight="Bold" Foreground="White"/>
                 <TextBlock x:Name="Player1Score" Margin="10,195,1160,523" FontSize="30" Foreground="White"/>
                 <TextBlock x:Name="Player2Score" Margin="10,282,1160,425" FontSize="30" Foreground="White" RenderTransformOrigin="0.471,0.518"/>
+                
+
+
             </Grid>
             
         </Canvas>

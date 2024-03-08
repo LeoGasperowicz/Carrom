@@ -8,6 +8,7 @@ namespace Carrom
 {
     public class Player
     {
+        //Changer les attributs en privé et faire les get et set 
         public int id { get; set; }
         public string name { get; set; }
         public List<CarromPiece> pieces { get; set; }
