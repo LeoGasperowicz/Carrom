@@ -49,8 +49,6 @@ namespace Carrom
             {
                 string player1Name = Player1TextBox.Text;
                 string player2Name = Player2TextBox.Text;
-                Player player1 = new Player(player1Name);
-                Player player2 = new Player(player2Name);
                 string databaseChoice = "";
                 if (MariaDBRadioButton.IsChecked == true)
                 {
@@ -60,12 +58,7 @@ namespace Carrom
                 {
                     databaseChoice = "PostgreSQL";
                 }
-                // Change the Grid
-                ConfigGrid.Visibility = Visibility.Collapsed;
-                GameGrid.Visibility = Visibility.Visible;
-                List<int> score = new List<int> { 0, 0 };
-                Score scores = new Score(score);
-                PrintScore(player1, player2, scores);
+                InitializeGame(player1Name, player2Name, databaseChoice);   
             }
             else
             {
@@ -75,8 +68,8 @@ namespace Carrom
         }
         public void PrintScore(Player player1, Player player2, Score scores )
         {
-            Player1Score.Text = $"{player1.name}: {scores.GetScoreById(player1.id)}";
-            Player2Score.Text = $"{player2.name}: {scores.GetScoreById(player1.id)}";
+            Player1Score.Text = $"{player1.Name}: {scores.GetScoreById(player1.Id)}";
+            Player2Score.Text = $"{player2.Name}: {scores.GetScoreById(player1.Id)}";
         }
         // To raise what is write in the textbox when a person click on it
         private void Player1TextBox_GotFocus(object sender, RoutedEventArgs e)
@@ -116,6 +109,19 @@ namespace Carrom
                 tb.Text = "Name Player 2";
                 tb.Foreground = Brushes.Gray;
             }
+        }
+        public void InitializeGame(string namePlayer1, string namePlayer2, string databaseChoice)
+        {
+            Player player1 = new Player(namePlayer1);
+            Player player2 = new Player(namePlayer2);
+            
+            // Change the Grid
+            ConfigGrid.Visibility = Visibility.Collapsed;
+            GameGrid.Visibility = Visibility.Visible;
+            List<int> score = new List<int> { 0, 0 };
+            Score scores = new Score(score);
+            PrintScore(player1, player2, scores);
+            int playerTurn = Random.Next(2);
         }
     }
 }

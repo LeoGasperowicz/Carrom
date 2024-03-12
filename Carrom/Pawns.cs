@@ -9,17 +9,37 @@ namespace Carrom
 {
     public class Pawn
     {
-        public double diameter { get; set; }
-        public System.Drawing.Color color { get; set; }
-        public Point position;
+        private double diameter;
+        public double Diameter 
+        {
+            get { return this.diameter; }
+            set { this.diameter = value; } 
+        }
+        private System.Drawing.Color color;
+        public System.Drawing.Color Color
+        {
+            get {return this.color; }
+            set { this.color = value; } 
+        }
+        
+        private Point position;
         public Point Position
         {
-            get { return position; }
-            set { position = value; }
+            get { return this.position; }
+            set { this.position = value; }
         }
-        public Vector speedVector { get; set; }
-        public bool inGame { get; set; }
-
+        private Vector speedVector;
+        public Vector SpeedVector
+        {
+            get { return this.speedVector; }
+            set { this.speedVector = value; }
+        }
+        private bool inGame;
+        public bool InGame
+        {
+            get { return this.inGame; }
+            set { this.inGame = value; }
+        }
         public Pawn(double diameter, System.Drawing.Color color, Point position, Vector speedVector)
         {
             this.diameter = diameter;

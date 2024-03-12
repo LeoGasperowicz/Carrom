@@ -9,7 +9,7 @@ namespace Carrom
 {
     public class Score
     {
-        public List<int> scores { get; set; }
+        private List<int> scores { get; set; }
 
         public Score(List<int> scores)
         {
@@ -18,11 +18,11 @@ namespace Carrom
 
         public void UpdateScore(int playerId, Pawn piece)
         {
-            if (piece.color == Color.Red)
+            if (piece.Color == Color.Red)
             {
                 this.scores[playerId] += 5;
             }
-            else if (piece.color == Color.Black || piece.color== Color.White) 
+            else if (piece.Color == Color.Black || piece.Color == Color.White) 
             {
                 this.scores[playerId]++;
             }

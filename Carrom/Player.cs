@@ -9,9 +9,19 @@ namespace Carrom
     public class Player
     {
         //Changer les attributs en privé et faire les get et set 
-        public int id { get; set; }
-        public string name { get; set; }
-        public List<CarromPiece> pieces { get; set; }
+        private int id;
+        public int Id
+        {
+            get { return this.id;}
+            set { this.id = value; }
+        }
+        private string name;
+        public string Name
+        {
+            get { return this.name; }
+            set { this.name = value; }
+        }
+        private List<CarromPiece> pieces { get; set; }
 
 
         public Player(string name)
