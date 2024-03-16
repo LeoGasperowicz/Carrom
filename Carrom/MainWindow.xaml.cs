@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
+using System.Windows.Ink;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -110,18 +111,7 @@ namespace Carrom
                 tb.Foreground = Brushes.Gray;
             }
         }
-        public void InitializeGame(string namePlayer1, string namePlayer2, string databaseChoice)
-        {
-            Player player1 = new Player(namePlayer1);
-            Player player2 = new Player(namePlayer2);
-            
-            // Change the Grid
-            ConfigGrid.Visibility = Visibility.Collapsed;
-            GameGrid.Visibility = Visibility.Visible;
-            List<int> score = new List<int> { 0, 0 };
-            Score scores = new Score(score);
-            PrintScore(player1, player2, scores);
-            int playerTurn = Random.Next(2);
-        }
+        
     }
 }
+

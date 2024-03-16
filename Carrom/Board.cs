@@ -10,48 +10,91 @@ namespace Carrom
 {
     public class Board
     {
-        //Changer les attributs en privé et faire les get et set 
         private double height { get; }
         private double width { get; }
-        private List<Player> players { get; set; }
-        private List<Point> Holes { get; set; }
-
-        public Board(int height, int width, List<Player> players)
+        private List<Hole> holes { get; set; }
+        public List<Hole> Holes
+        {
+            get { return this.holes; }
+        }
+        public Board(int height, int width,List<Hole> holes)
         {
             this.height = height;
             this.width = width;
-            this.players = players;
+
+            this.holes = holes;
         }
 
-        public Player ChangePlayer(Player currentPlayer)
+        public void UpdatePositions(Striker striker, List<Pawn> allPawns)
         {
-            int playerIndex = players.FindIndex(player => player.Name == currentPlayer.Name);
-            Player newCurrentPlayer = players[(playerIndex+1)%2] ;
-            return newCurrentPlayer;
-        }
-        public void InitializeGame(Player player1, Player player2)
-        {
+            // Update striker position first
+            UpdatePawnPosition(striker);
 
+            // Check collision between striker and pawns
+            foreach (var pawn in allPawns.Where(p => p.InGame))
+            {
+                double dx = pawn.Position.X - striker.Position.X;
+                double dy = pawn.Position.Y - striker.Position.Y;
+                double distance = Math.Sqrt(dx * dx + dy * dy);
+
+                if (distance <= (striker.Diameter + pawn.Diameter) / 2)
+                {
+                    // Simple collision response: transfer striker's speed to the pawn
+                    double speedFactor = 0.5; // Adjust based on desired interaction strength
+                    Vector collisionVector = new Vector(dx, dy);
+                    collisionVector.Normalize();
+                    pawn.SpeedVector = new Vector(collisionVector.X * striker.SpeedVector.Length * speedFactor, collisionVector.Y * striker.SpeedVector.Length * speedFactor);
+                }
+            }
+
+            // Update positions of all pawns
+            foreach (var pawn in allPawns.Where(p => p.InGame))
+            {
+                UpdatePawnPosition(pawn);
+            }
         }
-        public void UpdatePawnPosition(Pawn pawn)
+
+        private void UpdatePawnPosition(Pawn pawn)
         {
-            // Mettre à jour la position basée sur le vecteur vitesse
+            double frictionCoefficient = 0.98;
+            pawn.SpeedVector = new Vector(pawn.SpeedVector.X * frictionCoefficient, pawn.SpeedVector.Y * frictionCoefficient);
+
+            // New position calculation
             double newX = pawn.Position.X + pawn.SpeedVector.X;
             double newY = pawn.Position.Y + pawn.SpeedVector.Y;
 
-            // Collision avec le bord gauche ou droit
-            if (pawn.Position.X < 0 || pawn.Position.X > this.width)
-            {
-                pawn.SpeedVector = new Vector(-pawn.SpeedVector.X, pawn.SpeedVector.Y); // Inverse la composante X pour rebondir
-                pawn.Position.X = Math.Clamp(pawn.Position.X, 0, this.width); // Assure que le pion reste dans les limites
-            }
+            // Edge collisions
+            newX = Math.Clamp(newX, 0, this.width);
+            newY = Math.Clamp(newY, 0, this.height);
 
-            // Collision avec le bord supérieur ou inférieur
-            if (pawn.Position.Y < 0 || pawn.Position.Y > this.height)
+            // Update speed vector for edge collisions
+            if (newX <= 0 || newX >= this.width)
+            {
+                pawn.SpeedVector = new Vector(-pawn.SpeedVector.X, pawn.SpeedVector.Y);
+            }
+            if (newY <= 0 || newY >= this.height)
             {
                 pawn.SpeedVector = new Vector(pawn.SpeedVector.X, -pawn.SpeedVector.Y);
-                pawn.Position.Y = Math.Clamp(pawn.Position.Y, 0, this.height); // Assure que le pion reste dans les limites
+            }
+
+            // Check hole collisions and mark pawn as not in game if needed
+            foreach (Hole hole in this.holes)
+            {
+                double holeDist = Math.Sqrt(Math.Pow(newX - hole.Center.X, 2) + Math.Pow(newY - hole.Center.Y, 2));
+                if (holeDist <= hole.Diameter / 2)
+                {
+                    pawn.InGame = false;
+                    break;
+                }
+            }
+
+            // Apply the new position if pawn is still in game
+            if (pawn.InGame)
+            {
+                pawn.Position = new Point(newX, newY);
             }
         }
+
+
     }
 }

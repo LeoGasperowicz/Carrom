@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
 
 namespace Carrom
 {
@@ -15,8 +16,8 @@ namespace Carrom
             get { return this.diameter; }
             set { this.diameter = value; } 
         }
-        private System.Drawing.Color color;
-        public System.Drawing.Color Color
+        private Color color;
+        public Color Color
         {
             get {return this.color; }
             set { this.color = value; } 
@@ -40,7 +41,7 @@ namespace Carrom
             get { return this.inGame; }
             set { this.inGame = value; }
         }
-        public Pawn(double diameter, System.Drawing.Color color, Point position, Vector speedVector)
+        public Pawn(double diameter, Color color, Point position, Vector speedVector)
         {
             this.diameter = diameter;
             this.color = color;

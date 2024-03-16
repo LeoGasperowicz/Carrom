@@ -4,12 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
 
 namespace Carrom
 {
     public class Striker : Pawn
     {
-        public Striker(double diameter, System.Drawing.Color color, Point position, Vector speedVector)
+        public Striker(double diameter, Color color, Point position, Vector speedVector)
             : base(diameter, color, position, speedVector)
         {
             this.Diameter = diameter;
