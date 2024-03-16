@@ -44,9 +44,5 @@ namespace Carrom
             this.pieces = pieces;
         }
 
-        public void UpdateListPawn(CarromPiece piece)
-        {
-        }
-
     }
 }

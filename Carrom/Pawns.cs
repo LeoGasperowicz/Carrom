@@ -49,14 +49,9 @@ namespace Carrom
             this.speedVector = speedVector;
         }
 
-        public void Move(Point newPosition)
-        {
-        }
+        
 
-        public bool isInHole()
-        {
-            return true;
-        }
+       
 
     }
 }
