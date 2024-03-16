@@ -82,7 +82,7 @@ namespace Carrom
 
                 board.UpdatePositions(this.striker, allPawns); 
 
-                // Supposons que CheckPawnsInHoles renvoie une liste de pions dans les trous
+                // to method return a list of all the pawns whiwh are in a hole during this turn
                 var pawnsInHoles = CheckPawnsInHoles(allPawns);
                 bool scoredThisTurn = false;
                 // Get the color of the pawn of the current player
@@ -91,24 +91,44 @@ namespace Carrom
                 {
                      color = pawn.Color;
                 }
-                // Mettre à jour les scores pour tous les pions qui sont tombés dans les trous et vérifier si le joueur actuel a marqué
-                foreach (var pawn in pawnsInHoles)
+                // Update the scores, verify the current player scores and see which are the pawns in the holes
+                foreach (CarromPiece pawn in pawnsInHoles)
                 {
+                    Player owner = null;
+                    if (pawn.Color == color) 
+                    {
+                        owner = this.currentPlayer;
+                    }
+                    else 
+                    {
+                        if (this.currentPlayer == this.player1)
+                        {
+                            owner = this.player2;
+                        }
+                        else { owner = this.player1; }
+                        
+                    }
                     if (pawn.Color == color || pawn.Color == Colors.Red) 
                     {
                         scoredThisTurn = true;
                     }
 
                     score.UpdateScore(currentPlayer.Id, pawn,color);
-                    // Et probablement enlever ou marquer le pion comme n'étant plus en jeu
+                    // Remove the pawn from its owner's list if not null and the pawn isn't the queen
+                    if (owner != null && pawn.Color != Colors.Red)
+                    {
+                        owner.Pieces.Remove(pawn);
+                    }
+                    // Mark the pawn as not in game
+                    pawn.InGame = false;
                 }
 
-                // Valider les points de la reine avant de changer de joueur
+
                 score.ValidateQueenScore();
 
                 if (!scoredThisTurn)
                 {
-                    // Change the player only if he scores with his pawn or with the queen
+                    // Change the player only if he doesn't scoreds with his pawn or with the queen
                     currentPlayer = (currentPlayer == player1) ? player2 : player1;
                 }
             }

@@ -10,8 +10,6 @@
   <ItemGroup>
     <None Remove="Carrom Board.jpg" />
     <None Remove="Carrom Start Image.jpg" />
-    <None Remove="Carrom_board2.jpg" />
-    <None Remove="Carrom_Board3.jpg" />
     <None Remove="Configuration picture.jpg" />
     <None Remove="Configuration_picture.jpg" />
     <None Remove="Pictures\Carrom Board.jpg" />
@@ -24,8 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Carrom_board2.jpg" />
-    <Resource Include="Carrom_Board3.jpg" />
     <Resource Include="Pictures\Configuration_picture.jpg" />
     <Resource Include="Pictures\Carrom Board.jpg" />
     <Resource Include="Pictures\Carrom Start Image.jpg" />

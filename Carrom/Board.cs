@@ -40,7 +40,7 @@ namespace Carrom
                 if (distance <= (striker.Diameter + pawn.Diameter) / 2)
                 {
                     // Simple collision response: transfer striker's speed to the pawn
-                    double speedFactor = 0.5; // Adjust based on desired interaction strength
+                    double speedFactor = 0.5; // Adjust 
                     Vector collisionVector = new Vector(dx, dy);
                     collisionVector.Normalize();
                     pawn.SpeedVector = new Vector(collisionVector.X * striker.SpeedVector.Length * speedFactor, collisionVector.Y * striker.SpeedVector.Length * speedFactor);

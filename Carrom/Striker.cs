@@ -19,9 +19,7 @@ namespace Carrom
             this.SpeedVector = speedVector;
         }
 
-        public void HitPiece(Pawn targetPawn)
-        {
-        }
+        
 
     }
 }
