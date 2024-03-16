@@ -34,3 +34,6 @@ Inside you will find :
 
 The other class which need a bit more of explications is Board : 
 In this class I created methods to try to implement the physics into the game with : the reaction of the pawns when they collide and against the edge and also to know if they are in a hole or not.
+
+## UML 
+You will also be able to see the UML diagram of the game updated. It is the file named : Carrom UML Diagram
