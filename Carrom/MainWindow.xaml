@@ -11,8 +11,8 @@
         <Image x:Name="StarterImage" Source="/Pictures/Carrom Start Image.jpg" Stretch="UniformToFill" />
         <Canvas>
 
-            <Button x:Name="PlayButton" Click="PlayButtonClick" Canvas.Left="577" Canvas.Top="529" Height="162" Width="325" HorizontalAlignment="Left" VerticalAlignment="Center">
-                <Image x:Name="GameImage" Source="/Pictures/Play_Buttton.jpg" Width="374">
+            <Button x:Name="PlayButton" Click="PlayButtonClick" Canvas.Left="577" Canvas.Top="529" Height="162" Width="325" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Image x:Name="GameImage" Source="/Pictures/Play_Buttton.jpg" Width="325" Height="152">
                     <Image.RenderTransform>
                         <ScaleTransform x:Name="imageScaleTransform" ScaleX="1" ScaleY="1"/>
                     </Image.RenderTransform>
@@ -46,32 +46,83 @@
             </Button>
 
             <!-- Configuration of the players -->
-            <Grid x:Name="ConfigGrid" Visibility="Collapsed" HorizontalAlignment="Center" Height="800" VerticalAlignment="Center" Width="1500">
+            <Grid x:Name="ConfigGridP1" Visibility="Collapsed" HorizontalAlignment="Center" Height="800" VerticalAlignment="Center" Width="1500">
                 <!-- Configuration Image -->
                 <Image Stretch="UniformToFill" Source="/Pictures/Configuration_picture.jpg"/>
 
                 <!-- TextBoxes and Start Game Button -->
                 <Grid >
-                    <TextBox x:Name="Player1TextBox" Margin="579,352,771,423" Height="25" Width="150" 
+                    <TextBox x:Name="NamePlayer1TextBox" Margin="579,352,771,423" Height="25" Width="150" 
                          Background="Transparent" Text="Name Player 1" Foreground="Gray"  
                          BorderBrush="Black" BorderThickness="2" FontWeight="Bold"
-                         GotFocus="Player1TextBox_GotFocus" LostFocus="Player1TextBox_LostFocus"/>
-                    <TextBox x:Name="Player2TextBox" Height="25" Width="150" 
+                         GotFocus="NamePlayer1TextBox_GotFocus" LostFocus="NamePlayer1TextBox_LostFocus"/>
+                    <TextBox x:Name="MdpPlayer1TextBox" Height="25" Width="150" 
                          Margin="579,382,771,393" Background="Transparent" 
-                         Text="Name Player 2" Foreground="Gray" 
+                         Text="Password Player 1" Foreground="Gray" 
                          BorderBrush="Black" BorderThickness="2" FontWeight="Bold"
-                         GotFocus="Player2TextBox_GotFocus" LostFocus="Player2TextBox_LostFocus"/>
+                         GotFocus="MdpPlayer1TextBox_GotFocus" LostFocus="MdpPlayer1TextBox_LostFocus"/>
 
-                    <TextBlock Text="Choose the database" 
-                        Margin="533,452,807,324" FontSize="16" FontWeight="Bold"/>
+                    <Button Content="Print the list of the players" Click="listPlayers" Height="25" Width="150" Margin="661,400,689,172"/>
+                    <Button Content="Create an account" Click="createPlayer" Height="25" Width="150" Margin="661,500,689,172"/>
+                    <Button Content="Log in" Click="PassToPlayer2" Height="25" Width="150" Margin="661,603,689,172"/>
+                </Grid>
+            </Grid>
+            <Grid x:Name="ConfigGridP2" Visibility="Collapsed" HorizontalAlignment="Center" Height="800" VerticalAlignment="Center" Width="1500">
+                <!-- Configuration Image -->
+                <Image Stretch="UniformToFill" Source="/Pictures/Configuration_picture.jpg"/>
 
-                    <RadioButton x:Name ="MariaDBRadioButton" GroupName="DatabaseOptions" Content="MariaDB" 
-                        Margin="579,476,846,304" FontSize="14"/>
-                    <RadioButton x:Name ="PostgreSQLRadioButton" GroupName="DatabaseOptions" Content="PostgreSQL" 
-                        Margin="579,501,807,275" FontSize="14"/>
+                <!-- TextBoxes and Start Game Button -->
+                <Grid >
+                    <TextBox x:Name="NamePlayer2TextBox" Margin="579,352,771,423" Height="25" Width="150" 
+                         Background="Transparent" Text="Name Player 2" Foreground="Gray"  
+                         BorderBrush="Black" BorderThickness="2" FontWeight="Bold"
+                         GotFocus="NamePlayer2TextBox_GotFocus" LostFocus="NamePlayer2TextBox_LostFocus"/>
+                    <TextBox x:Name="MdpPlayer2TextBox" Height="25" Width="150" 
+                         Margin="579,382,771,393" Background="Transparent" 
+                         Text="Password Player 2" Foreground="Gray" 
+                         BorderBrush="Black" BorderThickness="2" FontWeight="Bold"
+                         GotFocus="MdpPlayer2TextBox_GotFocus" LostFocus="MdpPlayer2TextBox_LostFocus"/>
 
-
+                    <Button Content="Print the list of the players" Click="listPlayers" Height="25" Width="150" Margin="661,400,689,172"/>
+                    <Button Content="Create an account" Click="createPlayer" Height="25" Width="150" Margin="661,500,689,172"/>
                     <Button Content="Start the game" Click="StartGameButton_Click" Height="25" Width="150" Margin="661,603,689,172"/>
+                </Grid>
+            </Grid>
+            <Grid x:Name="ConfigGridNP" Visibility="Collapsed" HorizontalAlignment="Center" Height="800" VerticalAlignment="Center" Width="1500">
+                <!-- Configuration Image -->
+                <Image Stretch="UniformToFill" Source="/Pictures/Configuration_picture.jpg"/>
+
+                <!-- TextBoxes and Start Game Button -->
+                <Grid >
+                    <TextBox x:Name="NamePlayerNPTextBox" Margin="579,352,771,423" Height="25" Width="150" 
+                         Background="Transparent" Text="Choose a name" Foreground="Gray"  
+                         BorderBrush="Black" BorderThickness="2" FontWeight="Bold"
+                         GotFocus="NamePlayerNPTextBox_GotFocus" LostFocus="NamePlayerNPTextBox_LostFocus"/>
+                    <TextBox x:Name="MdpPlayerNPTextBox" Height="25" Width="150" 
+                         Margin="579,382,771,393" Background="Transparent" 
+                         Text="Write your password" Foreground="Gray" 
+                         BorderBrush="Black" BorderThickness="2" FontWeight="Bold"
+                         GotFocus="MdpPlayerNPTextBox_GotFocus" LostFocus="MdpPlayerNPTextBox_LostFocus"/>
+                    <TextBox x:Name="CMdpPlayerNPTextBox" Height="25" Width="150" 
+                         Margin="579,418,771,357" Background="Transparent" 
+                         Text="Confirm your password" Foreground="Gray" 
+                         BorderBrush="Black" BorderThickness="2" FontWeight="Bold"
+                         GotFocus="CMdpPlayerNPTextBox_GotFocus" LostFocus="CMdpPlayerNPTextBox_LostFocus"/>
+
+
+
+                    <Button Content="Continue" Click="goBackToLogin" Height="25" Width="150" Margin="661,603,689,172"/>
+                </Grid>
+            </Grid>
+
+            <Grid x:Name="ListPlayers" Visibility="Collapsed" HorizontalAlignment="Center" Height="800" VerticalAlignment="Center" Width="1500">
+                <!-- Configuration Image -->
+                <Image Stretch="UniformToFill" Source="/Pictures/Configuration_picture.jpg"/>
+
+                <!-- TextBoxes and Start Game Button -->
+                <Grid >
+                    <ListBox x:Name="PlayersListBox" Height="200" Width="300" Margin="10"/>
+                    <Button Content="Go back to Log in" Click="goBackToLogin2" Height="25" Width="150" Margin="661,603,689,172"/>
                 </Grid>
             </Grid>
             <!-- Board of the Game-->
