@@ -37,3 +37,6 @@ In this class I created methods to try to implement the physics into the game wi
 
 ## UML 
 You will also be able to see the UML diagram of the game updated. It is the file named : Carrom UML Diagram
+
+## Explications of the implementations for Week 11
+
