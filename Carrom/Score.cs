@@ -59,7 +59,7 @@ namespace Carrom
 
         public int GetScoreById(int playerId)
         {
-            return (playerId >= 0 && playerId < scores.Count) ? scores[playerId] : 0;
+            return (playerId-1 >= 0 && playerId-1 < scores.Count) ? scores[playerId-1] : 0;
         }
     }
 }

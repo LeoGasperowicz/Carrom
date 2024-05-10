@@ -131,8 +131,8 @@
                 <Image Height="750" Width="750" Source="/Carrom_Board3.jpg"/>
                 <TextBlock Text="Score : " 
                         Margin="39,79,1301,633" FontSize="50" FontWeight="Bold" Foreground="White"/>
-                <TextBlock x:Name="Player1Score" Margin="10,195,1160,523" FontSize="30" Foreground="White"/>
-                <TextBlock x:Name="Player2Score" Margin="10,282,1160,425" FontSize="30" Foreground="White" RenderTransformOrigin="0.471,0.518"/>
+                <TextBlock x:Name="Player1Score" Text="1" Margin="10,195,1160,523" FontSize="30" Foreground="White"/>
+                <TextBlock x:Name="Player2Score" Text="2" Margin="10,282,1160,425" FontSize="30" Foreground="White" RenderTransformOrigin="0.471,0.518"/>
 
                 <Button x:Name="btnBestScore1" Content="Best score of " Click="bestScoreP1" Width="150" Margin="1198,236,152,523"/>
                 <Button x:Name="btnBestScore2" Content="Best score of " Click="bestScoreP2" Width="150" Margin="1198,123,152,633"/>

@@ -108,6 +108,9 @@ namespace Carrom
                 ConfigGridP2.Visibility = Visibility.Collapsed;
                 GameGrid.Visibility = Visibility.Visible;
                 SetButtonContent2(player2Name);
+                List<int> score = new List<int> { 0, 0 };
+                Score scores = new Score(score);
+                PrintScore(1, 2,scores);
                 //InitializeGame(player1Name, player2Name, databaseChoice);   
             }
             else
@@ -123,10 +126,10 @@ namespace Carrom
             }
 
         }
-        public void PrintScore(Player player1, Player player2, Score scores)
+        public void PrintScore(int player1, int player2, Score scores)
         {
-            Player1Score.Text = $"{player1.Name}: {scores.GetScoreById(player1.Id)}";
-            Player2Score.Text = $"{player2.Name}: {scores.GetScoreById(player1.Id)}";
+            Player1Score.Text = $"{NamePlayer1TextBox.Text}: {scores.GetScoreById(player1)}";
+            Player2Score.Text = $"{NamePlayer2TextBox.Text}: {scores.GetScoreById(player1)}";
         }
         // To raise what is write in the textbox when a person click on it
         private void NamePlayer1TextBox_GotFocus(object sender, RoutedEventArgs e)
