@@ -26,9 +26,9 @@ namespace Carrom
         public MainWindow()
         {
             mariaDb = new MariaDB();
-            mariaDb.createScoreTable();
             InitializeComponent();
             WindowState = WindowState.Maximized;
+            
 
             /*mariaDb.testConnection();
             mariaDb.createDB();
@@ -38,6 +38,14 @@ namespace Carrom
             mariaDb.deletePlayer();
             mariaDb.checkUser();*/
 
+        }
+        private void SetButtonContent(string player1Name)
+        {
+            btnBestScore1.Content = $"Best score of {player1Name}";
+        }
+        private void SetButtonContent2(string player2Name)
+        {
+            btnBestScore2.Content = $"Best score of {player2Name}";
         }
         private void PlayButtonClick(object sender, RoutedEventArgs e)
         {
@@ -61,6 +69,7 @@ namespace Carrom
                 string player1Password = MdpPlayer1TextBox.Text;
                 ConfigGridP1.Visibility = Visibility.Collapsed;
                 ConfigGridP2.Visibility = Visibility.Visible;
+                SetButtonContent(player1Name);
                 //InitializeGame(player1Name, player2Name, databaseChoice);   
             }
             else
@@ -98,6 +107,7 @@ namespace Carrom
                 string player2Mdp = MdpPlayer2TextBox.Text;
                 ConfigGridP2.Visibility = Visibility.Collapsed;
                 GameGrid.Visibility = Visibility.Visible;
+                SetButtonContent2(player2Name);
                 //InitializeGame(player1Name, player2Name, databaseChoice);   
             }
             else
@@ -292,6 +302,26 @@ namespace Carrom
         {
             ListPlayers.Visibility = Visibility.Collapsed;
             ConfigGridP1.Visibility = Visibility.Visible;
+        }
+        public void DisplayBestScore(string playerName)
+        {
+            var result = mariaDb.searchBestScore(playerName);
+            if (result.success)
+            {
+                MessageBox.Show($"Best score for {result.name} is {result.bestScore} made on {result.date}");
+            }
+            else
+            {
+                MessageBox.Show("No score data found or an error occurred.");
+            }
+        }
+        private void bestScoreP1(object sender, RoutedEventArgs e)
+        {
+            DisplayBestScore(NamePlayer1TextBox.Text);
+        }
+        private void bestScoreP2(object sender, RoutedEventArgs e)
+        {
+            DisplayBestScore(NamePlayer2TextBox.Text);
         }
     }
 }

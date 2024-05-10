@@ -83,7 +83,7 @@ namespace Carrom
             CREATE TABLE IF NOT EXISTS score (
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 idP int,
-                date TIME,
+                date DATETIME,
                 score INT,
                 CONSTRAINT fk_username FOREIGN KEY (idP) REFERENCES player(id)
             );";
@@ -217,6 +217,42 @@ namespace Carrom
                     conn.Close();
                 }
             return result;
+        }
+        public (bool success, string name, int bestScore, DateTime date) searchBestScore(string playerName)
+        {
+            string query = "SELECT name, Max(Score) AS BestScore, date FROM score LEFT JOIN player ON score.idP = player.id WHERE NAME = @PlayerName GROUP BY name, date ORDER BY BestScore DESC LIMIT 1";
+
+            using (MySqlConnection conn = new MySqlConnection(MyConnectionString))
+            {
+                using (var cmd = conn.CreateCommand())
+                {
+                    
+                    try
+                    {
+                        conn.Open();
+                        cmd.CommandText = "USE Carrom";
+                        cmd.ExecuteNonQuery();
+                        cmd.CommandText = query;
+                        cmd.Parameters.AddWithValue("@PlayerName", playerName);
+                        using (MySqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                string name = reader["name"].ToString();
+                                int bestScore = Convert.ToInt32(reader["BestScore"]);
+                                DateTime scoreDate = Convert.ToDateTime(reader["date"]);
+                                return (true, name, bestScore, scoreDate);
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        // Log or handle exceptions as needed
+                        Console.WriteLine($"Database error: {ex.Message}");
+                    }
+                }
+            }
+            return (false, null, 0, DateTime.MinValue); ; 
         }
     }
 }
