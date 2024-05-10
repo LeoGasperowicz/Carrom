@@ -41,7 +41,7 @@ You will also be able to see the UML diagram of the game updated. It is the file
 ## Explications of the implementations for Week 11
 In the repo you will find the database I use for the game and also the tuples.
 I created some players in the database and also some score for each of them. (Methods: createScoreTable(), createUser())
-When you start the game you will be able to log in or registrer a player and press a button to have the list of the players(Method: listTable()). Once the first player is log in, you will have another screen, approximatly the same as before. (Methods: checkUser(), isExist())  
-Then, the second player will press the button 'Start the game' and a new screen appear. Here you will find the score of the 2 current players and also 2 buttons to get the best score for each of them. If you click on them you will find all the details you want about the best score of the player.(Method: searchBestScore())
+When you start the game you will be able to log in or register a player and press a button to have the list of the players(Method: listTable()). Once the first player is logged in, you will have another screen, approximately the same as before. (Methods: checkUser(), isExist())  
+Then, the second player will press the button 'Start the game' and a new screen appears. Here you will find the score of the 2 current players and also 2 buttons to get the best score for each of them. If you click on them you will find all the details you want about the best score of the player.(Method: searchBestScore())
 
 All the methods I mentioned here are in the mariaDB class. If you want to see how I manage the screens and the results of each of them you will find in the MainWindow.xaml.cs
