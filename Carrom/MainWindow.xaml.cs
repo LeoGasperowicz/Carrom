@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Carrom
 {
@@ -23,12 +24,18 @@ namespace Carrom
     public partial class MainWindow : Window
     {
         private MariaDB mariaDb;
+        private Game game;
+        private Pawn selectedPawn;
+        private Hole selectedHole;
         public MainWindow()
         {
             mariaDb = new MariaDB();
             InitializeComponent();
             WindowState = WindowState.Maximized;
-            
+            game = new Game();
+            game.InitializeGame("Player 1", "Player 2");
+            PopulateComboBoxes();
+            DrawBoard();
 
             /*mariaDb.testConnection();
             mariaDb.createDB();
@@ -39,6 +46,128 @@ namespace Carrom
             mariaDb.checkUser();*/
 
         }
+        private void PopulateComboBoxes()
+        {
+            var allPawns = game.Player1.Pieces.Concat(game.Player2.Pieces)
+            .Where(p => p.InGame)
+            .ToList();
+
+            allPawns.Add(game.Queen);
+
+            PawnComboBox.ItemsSource = allPawns
+                .Select(p => new { Display = $"{p.Number} ({p.Color})", Value = p })
+                .ToList();
+
+            PawnComboBox.DisplayMemberPath = "Display";
+            PawnComboBox.SelectedValuePath = "Value";
+
+            HoleComboBox.ItemsSource = game.Board.Holes;
+        }
+
+        private void DrawBoard()
+        {
+            BoardCanvas.Children.Clear();
+
+            foreach (var hole in game.Board.Holes)
+            {
+                Ellipse holeEllipse = new Ellipse
+                {
+                    Width = hole.Diameter,
+                    Height = hole.Diameter,
+                    Fill = Brushes.Black,
+                    Stroke = Brushes.White,
+                    StrokeThickness = 2
+                };
+                Canvas.SetLeft(holeEllipse, hole.Center.X - hole.Diameter / 2);
+                Canvas.SetTop(holeEllipse, hole.Center.Y - hole.Diameter / 2);
+                BoardCanvas.Children.Add(holeEllipse);
+            }
+
+            DrawPawn(game.Queen);
+            DrawStriker(game.Striker);
+
+            foreach (CarromPiece pawn in game.Player1.Pieces.Concat(game.Player2.Pieces))
+            {
+                    DrawPawn(pawn);
+            }
+        }
+
+        private void DrawPawn(CarromPiece pawn)
+        {
+            Ellipse pawnEllipse = new Ellipse
+            {
+                Width = pawn.Diameter,
+                Height = pawn.Diameter,
+                Fill = new SolidColorBrush(pawn.Color),
+                Stroke = Brushes.Black,
+                StrokeThickness = 1
+            };
+            Canvas.SetLeft(pawnEllipse, pawn.Position.X - pawn.Diameter / 2);
+            Canvas.SetTop(pawnEllipse, pawn.Position.Y - pawn.Diameter / 2);
+            BoardCanvas.Children.Add(pawnEllipse);
+            // Draw the number on the pawn
+            TextBlock numberText = new TextBlock
+            {
+                Text = pawn.Number.ToString(),
+                FontWeight = FontWeights.Bold,
+                FontSize = 10
+            };
+            if (pawn.Color == Colors.White)
+            {
+                numberText.Foreground = Brushes.Black;
+            }
+            else
+            {
+                numberText.Foreground = Brushes.White;
+            }
+            Canvas.SetLeft(numberText, pawn.Position.X - 5); // Adjust positioning
+            Canvas.SetTop(numberText, pawn.Position.Y - 5); // Adjust positioning
+            BoardCanvas.Children.Add(numberText);
+        }
+        private void DrawStriker(Striker pawn)
+        {
+            Ellipse pawnEllipse = new Ellipse
+            {
+                Width = pawn.Diameter,
+                Height = pawn.Diameter,
+                Fill = new SolidColorBrush(pawn.Color),
+                Stroke = Brushes.Black,
+                StrokeThickness = 1
+            };
+            Canvas.SetLeft(pawnEllipse, pawn.Position.X - pawn.Diameter / 2);
+            Canvas.SetTop(pawnEllipse, pawn.Position.Y - pawn.Diameter / 2);
+            BoardCanvas.Children.Add(pawnEllipse);
+        }
+        private void PawnComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            this.selectedPawn = PawnComboBox.SelectedItem as Pawn;
+        }
+
+        private void HoleComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            this.selectedHole = HoleComboBox.SelectedItem as Hole;
+        }
+
+        private void PlayTurnButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.selectedPawn != null && this.selectedHole != null)
+            {
+                game.PlayTurn(this.selectedPawn as CarromPiece, this.selectedHole);
+                DrawBoard();
+                UpdateScores();
+                PopulateComboBoxes(); // Refresh the ComboBox items
+            }
+            else
+            {
+                MessageBox.Show("Please select both a pawn and a hole.", "Selection Missing", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+        }
+
+        private void UpdateScores()
+        {
+            Player1Score.Text = $"{game.Player1.Name}: {game.Player1.Score}";
+            Player2Score.Text = $"{game.Player2.Name}: {game.Player2.Score}";
+        }
         private void SetButtonContent(string player1Name)
         {
             btnBestScore1.Content = $"Best score of {player1Name}";
@@ -47,12 +176,13 @@ namespace Carrom
         {
             btnBestScore2.Content = $"Best score of {player2Name}";
         }
-        private void PlayButtonClick(object sender, RoutedEventArgs e)
+        private void PlayButtonClick(object sender, RoutedEventArgs e) // Here be careful I have to change 
         {
             // Change the Grid
             StarterImage.Visibility = Visibility.Collapsed;
             PlayButton.Visibility = Visibility.Collapsed;
-            ConfigGridP1.Visibility = Visibility.Visible;
+            GameGrid.Visibility = Visibility.Visible;
+            //ConfigGridP1.Visibility = Visibility.Visible;
         }
         private void PassToPlayer2(object sender, RoutedEventArgs e)
         {

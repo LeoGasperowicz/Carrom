@@ -19,5 +19,9 @@ namespace Carrom
             this.center = center;
             this.diameter = diameter;   
         }
+        public override string ToString()
+        {
+            return $"Hole at {Center}";
+        }
     }
 }

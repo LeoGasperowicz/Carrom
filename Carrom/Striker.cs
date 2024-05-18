@@ -10,13 +10,12 @@ namespace Carrom
 {
     public class Striker : Pawn
     {
-        public Striker(double diameter, Color color, Point position, Vector speedVector)
-            : base(diameter, color, position, speedVector)
+        public Striker(double diameter, Color color, Point position)
+            : base(diameter, color, position)
         {
             this.Diameter = diameter;
             this.Color = color;
             this.Position = position;
-            this.SpeedVector = speedVector;
         }
 
         

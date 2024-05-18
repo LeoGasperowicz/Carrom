@@ -29,29 +29,23 @@ namespace Carrom
             get { return this.position; }
             set { this.position = value; }
         }
-        private Vector speedVector;
-        public Vector SpeedVector
-        {
-            get { return this.speedVector; }
-            set { this.speedVector = value; }
-        }
         private bool inGame;
         public bool InGame
         {
             get { return this.inGame; }
             set { this.inGame = value; }
         }
-        public Pawn(double diameter, Color color, Point position, Vector speedVector)
+        
+        public Pawn(double diameter, Color color, Point position)
         {
             this.diameter = diameter;
             this.color = color;
             this.position = position;
-            this.speedVector = speedVector;
+            this.inGame=true;
         }
-
-        
-
-       
-
+        public override string ToString()
+        {
+            return $"CarromPiece {Color}";
+        }
     }
 }

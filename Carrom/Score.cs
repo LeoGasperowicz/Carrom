@@ -12,7 +12,7 @@ namespace Carrom
     public class Score
     {
         private List<int> scores;
-        public List<int> Scores => scores;
+
 
         private int queenScorer = -1;
 

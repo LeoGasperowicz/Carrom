@@ -19,157 +19,116 @@ namespace Carrom
         private Score score;
         private List<Pawn> pawnsInHoles;
 
-        public void InitializeGame(string namePlayer1, string namePlayer2, string databaseChoice)
+        public Board Board { get { return this.board; } }
+        public Player Player1 { get { return this.player1; } }
+        public Player Player2 { get { return this.player2; } }
+        public CarromPiece Queen { get { return this.queen; } }
+        public Striker Striker { get { return this.striker; } }
+
+        public void InitializeGame(string namePlayer1, string namePlayer2)
         {
             this.player1 = new Player(namePlayer1);
             this.player2 = new Player(namePlayer2);
-            //List<Player> players = new List<Player>();
-            //players.AddRange(new List<Player> { this.player1, this.player2 });
-            // Change the Grid
-            //ConfigGrid.Visibility = Visibility.Collapsed;
-            //GameGrid.Visibility = Visibility.Visible;
+
             List<int> scores = new List<int> { 0, 0 };
             this.score = new Score(scores);
-            //PrintScore(player1, player2, this.score);
+            this.pawnsInHoles = new List<Pawn>();
 
+            double centerX = 380; 
+            double centerY = 380; 
+            double distance = 20; 
 
-            // For the moment I define them without paying attention to their place
-            for (int i = 0; i < 9; i++)
+            // Define positions in a hexagonal pattern
+            List<Point> positions = new List<Point>
             {
-                this.player1.Pieces.Add(new CarromPiece(20, Colors.White, new Point(200, 200), new Vector(0, 0)));
-                this.player2.Pieces.Add(new CarromPiece(20, Colors.Black, new Point(200, 200), new Vector(0, 0)));
+                new Point(centerX, centerY),
+                new Point(centerX - distance, centerY - distance),
+                new Point(centerX, centerY - distance),
+                new Point(centerX + distance, centerY - distance),
+                new Point(centerX - distance * 2, centerY),
+                new Point(centerX - distance, centerY),
+                new Point(centerX + distance, centerY),
+                new Point(centerX + distance * 2, centerY),
+                new Point(centerX - distance, centerY + distance),
+                new Point(centerX, centerY + distance),
+                new Point(centerX + distance, centerY + distance),
+                new Point(centerX - distance * 2, centerY + distance * 2),
+                new Point(centerX - distance, centerY + distance * 2),
+                new Point(centerX, centerY + distance * 2),
+                new Point(centerX + distance, centerY + distance * 2),
+                new Point(centerX + distance * 2, centerY + distance * 2)
+            };
+
+            // Add the queen
+            this.queen = new CarromPiece(20, Colors.Red, positions[0],0);
+
+            // Add player1's pieces
+            for (int i = 1; i <= 8; i++)
+            {
+                Point point = positions[i];
+                this.player1.Pieces.Add(new CarromPiece(20, Colors.White, positions[i], i));
             }
 
-            this.queen = new CarromPiece(20, Colors.Red, new Point(200, 200), new Vector(0, 0));
-
-            this.striker = new Striker(30, Colors.Beige, new Point(200, 200), new Vector(0, 0));
-
-            List<Hole> holes = new List<Hole>();
-
-            holes.Add(new Hole(new Point(11, 11), 20));
-            holes.Add(new Hole(new Point(11, 409), 20));
-            holes.Add(new Hole(new Point(409, 11), 20));
-            holes.Add(new Hole(new Point(409, 409), 20));
-
-            this.board = new Board(420, 420, holes);
-            Random rnd = new Random();
-            int playerTurn = rnd.Next(2);
-            if(playerTurn == 0)
+            // Add player2's pieces
+            for (int i = 9; i < positions.Count; i++)
             {
-                this.currentPlayer = this.player1;
+                this.player2.Pieces.Add(new CarromPiece(20, Colors.Black, positions[i], i));
+            }
+
+            this.striker = new Striker(22, Colors.Blue, new Point(380, 595));
+
+            List<Hole> holes = new List<Hole>
+            {
+                new Hole(new Point(63, 63), 42),
+                new Hole(new Point(63, 685), 42),
+                new Hole(new Point(685, 63), 42),
+                new Hole(new Point(685, 685), 42)
+            };
+
+            this.board = new Board(820, 820, holes);
+            this.currentPlayer = (new Random().Next(2) == 0) ? this.player1 : this.player2;
+        }
+
+
+        public void PlayTurn(Pawn selectedPawn, Hole selectedHole)
+        {
+            double probability = CalculateProbability(selectedPawn, selectedHole);
+            bool success = DetermineSuccess(probability);
+
+            if (success)
+            {
+                // Move the pawn to the hole and update score
+                selectedPawn.InGame = false;
+                score.UpdateScore(currentPlayer.Id, selectedPawn, currentPlayer.Pieces.First().Color);
             }
             else
             {
-                this.currentPlayer = this.player2;
-            }
-            
-        }
-
-        public void Play()
-        {
-            while (!IsGameOver())
-            {
-                Console.WriteLine($"{this.currentPlayer.Name}'s turn.");
-
-                // Simulate the striker hit
-                Vector direction = GetStrikerDirectionFromUser();
-                this.striker.SpeedVector = direction;
-
-                List<Pawn> allPawns = new List<Pawn>();
-                allPawns.Add(this.queen);
-                allPawns.AddRange(this.player1.Pieces);
-                allPawns.AddRange(this.player2.Pieces);
-
-                board.UpdatePositions(this.striker, allPawns); 
-
-                // to method return a list of all the pawns whiwh are in a hole during this turn
-                var pawnsInHoles = CheckPawnsInHoles(allPawns);
-                bool scoredThisTurn = false;
-                // Get the color of the pawn of the current player
-                Color color = Colors.White;
-                foreach ( Pawn pawn in this.currentPlayer.Pieces)
-                {
-                     color = pawn.Color;
-                }
-                // Update the scores, verify the current player scores and see which are the pawns in the holes
-                foreach (CarromPiece pawn in pawnsInHoles)
-                {
-                    Player owner = null;
-                    if (pawn.Color == color) 
-                    {
-                        owner = this.currentPlayer;
-                    }
-                    else 
-                    {
-                        if (this.currentPlayer == this.player1)
-                        {
-                            owner = this.player2;
-                        }
-                        else { owner = this.player1; }
-                        
-                    }
-                    if (pawn.Color == color || pawn.Color == Colors.Red) 
-                    {
-                        scoredThisTurn = true;
-                    }
-
-                    score.UpdateScore(currentPlayer.Id, pawn,color);
-                    // Remove the pawn from its owner's list if not null and the pawn isn't the queen
-                    if (owner != null && pawn.Color != Colors.Red)
-                    {
-                        owner.Pieces.Remove(pawn);
-                    }
-                    // Mark the pawn as not in game
-                    pawn.InGame = false;
-                }
-
-
-                score.ValidateQueenScore();
-
-                if (!scoredThisTurn)
-                {
-                    // Change the player only if he doesn't scoreds with his pawn or with the queen
-                    currentPlayer = (currentPlayer == player1) ? player2 : player1;
-                }
-            }
-        }
-
-        private bool IsGameOver()
-        {
-            bool gameOver = false;
-            if((this.player1.Pieces.Count==0) || (this.player2.Pieces.Count == 0) || (this.score.Scores[0] >=20) || (this.score.Scores[1] >= 20))
-            {
-                gameOver = true;
-            }
-                return gameOver;
-        }
-        public List<Pawn> CheckPawnsInHoles(List<Pawn> pawns)
-        {
-            foreach (Pawn pawn in pawns)
-            {
-                foreach (Hole hole in board.Holes) 
-                {
-                    if (IsPawnInHole(pawn, hole))
-                    {
-                        this.pawnsInHoles.Add(pawn);
-                        break; 
-                    }
-                }
+                // Let user reposition the pawn
+                selectedPawn.Position = GetNewPawnPositionFromUser();
             }
 
-            return this.pawnsInHoles;
+            // Switch player turn
+            currentPlayer = (currentPlayer == player1) ? player2 : player1;
         }
 
-        private bool IsPawnInHole(Pawn pawn, Hole hole)
+        private double CalculateProbability(Pawn pawn, Hole hole)
         {
-            double distance = Point.Subtract(pawn.Position, hole.Center).Length;
-            return distance <= (hole.Diameter / 2); 
+            double distanceToHole = Point.Subtract(pawn.Position, hole.Center).Length;
+            double distanceToStriker = Point.Subtract(pawn.Position, striker.Position).Length;
+            // Simplified probability calculation based on distances
+            return Math.Max(0.1, 1 - (distanceToHole / (board.Width / 2)) * (distanceToStriker / (board.Width / 2)));
         }
 
-        private Vector GetStrikerDirectionFromUser()
+        private bool DetermineSuccess(double probability)
         {
-            // Get input from user to set direction and speed of striker
-            return new Vector(1, 1); // Placeholder for user input
+            Random random = new Random();
+            return random.NextDouble() < probability;
+        }
+
+        private Point GetNewPawnPositionFromUser()
+        {
+            // Placeholder for user input
+            return new Point(200, 200);
         }
     }
 }
