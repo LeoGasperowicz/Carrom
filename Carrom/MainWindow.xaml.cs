@@ -181,8 +181,8 @@ namespace Carrom
             // Change the Grid
             StarterImage.Visibility = Visibility.Collapsed;
             PlayButton.Visibility = Visibility.Collapsed;
-            GameGrid.Visibility = Visibility.Visible;
-            //ConfigGridP1.Visibility = Visibility.Visible;
+            //GameGrid.Visibility = Visibility.Visible;
+            ConfigGridP1.Visibility = Visibility.Visible;
         }
         private void PassToPlayer2(object sender, RoutedEventArgs e)
         {

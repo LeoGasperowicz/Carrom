@@ -126,7 +126,7 @@
                 </Grid>
             </Grid>
             <!-- Board of the Game-->
-            <Grid x:Name="GameGrid" Visibility="Visible" HorizontalAlignment="Center" Height="800" VerticalAlignment="Center" Width="1500" Background="Black">
+            <Grid x:Name="GameGrid" Visibility="Collapsed" HorizontalAlignment="Center" Height="800" VerticalAlignment="Center" Width="1500" Background="Black">
 
                 
                 <Grid.ColumnDefinitions>
