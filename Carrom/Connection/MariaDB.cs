@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Intrinsics.Arm;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls.Primitives;
+using System.Xml.Linq;
 using MySqlConnector;
 using MySqlX.XDevAPI.Common;
 using Npgsql.Replication;
@@ -217,6 +220,63 @@ namespace Carrom
                     conn.Close();
                 }
             return result;
+        }
+        public void saveGame(int idp, DateTime time, int score)
+        {
+            using (MySqlConnection conn = new MySqlConnection(MyConnectionString))
+            {
+                using (var cmd = conn.CreateCommand())
+                {
+                    try
+                    {
+                        conn.Open();
+                        cmd.CommandText = "USE Carrom";
+                        cmd.ExecuteNonQuery();
+                        cmd.CommandText = "INSERT INTO score(idP, date, score) VALUES(@idP, @date, @score)";
+                        cmd.Parameters.AddWithValue("@idP", idp);
+                        cmd.Parameters.AddWithValue("@date", time);
+                        cmd.Parameters.AddWithValue("@score", score);
+                        cmd.ExecuteNonQuery();
+                        conn.Close();
+                    }
+                    catch (Exception ex)
+                    {
+                        // Log or handle exceptions as needed
+                        Console.WriteLine($"Database error: {ex.Message}");
+                    }
+                }
+            }
+        }
+        public int getIdPlayer(string name)
+        {
+            int idP = 0;
+            using (var conn = new MySqlConnection(MyConnectionString))
+            using (var cmd = conn.CreateCommand())
+                try
+                {
+                    conn.Open();
+                    cmd.CommandText = "USE Carrom";
+                    cmd.ExecuteNonQuery();
+                    cmd.CommandText = "SELECT id FROM player where name = @name";
+                    cmd.Parameters.AddWithValue("@name", name);
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            idP = (int)reader["id"];
+                            reader.Close();                        
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // handle exception here
+                }
+                finally
+                {
+                    conn.Close();
+                }
+            return idP;
         }
         public (bool success, string name, int bestScore, DateTime date) searchBestScore(string playerName)
         {

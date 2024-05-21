@@ -21,6 +21,10 @@ namespace Carrom
         {
             get { return this.width; }
         }
+        public double Height
+        {
+            get { return this.height; }
+        }
         public Board(int height, int width,List<Hole> holes)
         {
             this.height = height;

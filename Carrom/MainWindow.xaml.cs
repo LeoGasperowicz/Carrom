@@ -25,17 +25,16 @@ namespace Carrom
     {
         private MariaDB mariaDb;
         private Game game;
-        private Pawn selectedPawn;
+        private CarromPiece selectedPawn;
         private Hole selectedHole;
         public MainWindow()
         {
-            mariaDb = new MariaDB();
+            this.mariaDb = new MariaDB();
             InitializeComponent();
-            WindowState = WindowState.Maximized;
-            game = new Game();
-            game.InitializeGame("Player 1", "Player 2");
-            PopulateComboBoxes();
-            DrawBoard();
+            //WindowState = WindowState.Maximized;
+            StarterImage.Visibility = Visibility.Visible;
+            PlayButton.Visibility = Visibility.Visible;
+            this.game=new Game();
 
             /*mariaDb.testConnection();
             mariaDb.createDB();
@@ -48,11 +47,11 @@ namespace Carrom
         }
         private void PopulateComboBoxes()
         {
-            var allPawns = game.Player1.Pieces.Concat(game.Player2.Pieces)
+            var allPawns = this.game.Player1.Pieces.Concat(this.game.Player2.Pieces)
             .Where(p => p.InGame)
             .ToList();
 
-            allPawns.Add(game.Queen);
+            allPawns.Add(this.game.Queen);
 
             PawnComboBox.ItemsSource = allPawns
                 .Select(p => new { Display = $"{p.Number} ({p.Color})", Value = p })
@@ -61,14 +60,19 @@ namespace Carrom
             PawnComboBox.DisplayMemberPath = "Display";
             PawnComboBox.SelectedValuePath = "Value";
 
-            HoleComboBox.ItemsSource = game.Board.Holes;
+            HoleComboBox.ItemsSource = this.game.Board.Holes
+            .Select(h => new { Display = $"Hole {h.Number}", Value = h })
+            .ToList();
+
+            HoleComboBox.DisplayMemberPath = "Display";
+            HoleComboBox.SelectedValuePath = "Value";
         }
 
         private void DrawBoard()
         {
             BoardCanvas.Children.Clear();
 
-            foreach (var hole in game.Board.Holes)
+            foreach (var hole in this.game.Board.Holes)
             {
                 Ellipse holeEllipse = new Ellipse
                 {
@@ -81,12 +85,24 @@ namespace Carrom
                 Canvas.SetLeft(holeEllipse, hole.Center.X - hole.Diameter / 2);
                 Canvas.SetTop(holeEllipse, hole.Center.Y - hole.Diameter / 2);
                 BoardCanvas.Children.Add(holeEllipse);
+
+                // Draw the number on the hole
+                TextBlock numberText = new TextBlock
+                {
+                    Text = hole.Number.ToString(),
+                    FontWeight = FontWeights.Bold,
+                    FontSize = 16,
+                    Foreground = Brushes.White
+                };
+                Canvas.SetLeft(numberText, hole.Center.X - 8); 
+                Canvas.SetTop(numberText, hole.Center.Y - 8);
+                BoardCanvas.Children.Add(numberText);
             }
 
-            DrawPawn(game.Queen);
-            DrawStriker(game.Striker);
+            DrawPawn(this.game.Queen);
+            DrawStriker(this.game.Striker);
 
-            foreach (CarromPiece pawn in game.Player1.Pieces.Concat(game.Player2.Pieces))
+            foreach (CarromPiece pawn in this.game.Player1.Pieces.Concat(this.game.Player2.Pieces).Where(p => p.InGame))
             {
                     DrawPawn(pawn);
             }
@@ -120,8 +136,8 @@ namespace Carrom
             {
                 numberText.Foreground = Brushes.White;
             }
-            Canvas.SetLeft(numberText, pawn.Position.X - 5); // Adjust positioning
-            Canvas.SetTop(numberText, pawn.Position.Y - 5); // Adjust positioning
+            Canvas.SetLeft(numberText, pawn.Position.X - 5); 
+            Canvas.SetTop(numberText, pawn.Position.Y - 5); 
             BoardCanvas.Children.Add(numberText);
         }
         private void DrawStriker(Striker pawn)
@@ -138,9 +154,33 @@ namespace Carrom
             Canvas.SetTop(pawnEllipse, pawn.Position.Y - pawn.Diameter / 2);
             BoardCanvas.Children.Add(pawnEllipse);
         }
+        private void BreakButton_Click(object sender, RoutedEventArgs e)
+        {
+            RandomizePawnPositions();
+            DrawBoard();
+            BreakButton.IsEnabled = false;
+            PlayTurnButton.IsEnabled = true;
+            this.game.SwitchPlayerTurn();
+            DrawBoard();
+        }
+
+        private void RandomizePawnPositions()
+        {
+            Random rand = new Random();
+            double boardWidth = this.game.Board.Width;
+            double boardHeight = this.game.Board.Height;
+            double margin = 50; // Margin from the edges to avoid placing pawns too close to the edge
+
+            foreach (var pawn in this.game.Player1.Pieces.Concat(this.game.Player2.Pieces).Where(p => p.InGame).Concat(new[] { this.game.Queen }))
+            {
+                double x = rand.NextDouble() * (boardWidth - 2 * margin) + margin;
+                double y = rand.NextDouble() * (boardHeight - 2 * margin) + margin;
+                pawn.Position = new Point(x, y);
+            }
+        }
         private void PawnComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            this.selectedPawn = PawnComboBox.SelectedItem as Pawn;
+            this.selectedPawn = PawnComboBox.SelectedValue as CarromPiece;
         }
 
         private void HoleComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -152,10 +192,40 @@ namespace Carrom
         {
             if (this.selectedPawn != null && this.selectedHole != null)
             {
-                game.PlayTurn(this.selectedPawn as CarromPiece, this.selectedHole);
+                this.game.PlayTurn(this.selectedPawn, this.selectedHole);
                 DrawBoard();
                 UpdateScores();
-                PopulateComboBoxes(); // Refresh the ComboBox items
+                PopulateComboBoxes(); 
+
+                // Check if the game is over
+                if (this.game.IsGameOver())
+                {
+                    string winner;
+                    if (this.game.Player1.Pieces.All(p => !p.InGame))
+                    {
+                        winner = this.game.Player1.Name;
+                    }
+                    else if (this.game.Player2.Pieces.All(p => !p.InGame))
+                    {
+                        winner = this.game.Player2.Name;
+                    }
+                    else
+                    {
+                        winner = "No winner yet"; 
+                    }
+                    MessageBox.Show($"Game Over! {winner} wins!", "Game Over", MessageBoxButton.OK, MessageBoxImage.Information);
+                    PlayTurnButton.IsEnabled = false;
+                    int idp1 = this.mariaDb.getIdPlayer(this.game.Player1.Name);
+                    int idp2 = this.mariaDb.getIdPlayer(this.game.Player2.Name);
+                    DateTime time = DateTime.Now;
+                    this.mariaDb.saveGame(idp1, time, this.game.Score.Scores[0]);
+                    this.mariaDb.saveGame(idp2, time, this.game.Score.Scores[1]);
+                }
+                else
+                {
+                    this.game.SwitchPlayerTurn();
+                    DrawBoard();
+                }
             }
             else
             {
@@ -165,8 +235,8 @@ namespace Carrom
 
         private void UpdateScores()
         {
-            Player1Score.Text = $"{game.Player1.Name}: {game.Player1.Score}";
-            Player2Score.Text = $"{game.Player2.Name}: {game.Player2.Score}";
+            Player1Score.Text = $"{this.game.Player1.Name}: {this.game.Score.Scores[0]}";
+            Player2Score.Text = $"{this.game.Player2.Name}: {this.game.Score.Scores[1]}";
         }
         private void SetButtonContent(string player1Name)
         {
@@ -176,13 +246,17 @@ namespace Carrom
         {
             btnBestScore2.Content = $"Best score of {player2Name}";
         }
-        private void PlayButtonClick(object sender, RoutedEventArgs e) // Here be careful I have to change 
+        private void PlayButtonClick(object sender, RoutedEventArgs e) 
         {
             // Change the Grid
             StarterImage.Visibility = Visibility.Collapsed;
             PlayButton.Visibility = Visibility.Collapsed;
-            //GameGrid.Visibility = Visibility.Visible;
             ConfigGridP1.Visibility = Visibility.Visible;
+        }
+        private void UpdatePlayerNames()
+        {
+            Player1Name.Text = this.game.Player1.Name;
+            Player2Name.Text = this.game.Player2.Name;
         }
         private void PassToPlayer2(object sender, RoutedEventArgs e)
         {
@@ -200,11 +274,11 @@ namespace Carrom
                 ConfigGridP1.Visibility = Visibility.Collapsed;
                 ConfigGridP2.Visibility = Visibility.Visible;
                 SetButtonContent(player1Name);
-                //InitializeGame(player1Name, player2Name, databaseChoice);   
+ 
             }
             else
             {
-                if (areWellLogin == false) // Becareful it remains the button to be created player 
+                if (areWellLogin == false) 
                 {
                     MessageBox.Show("There is an error in your name or in your password", "Missing Information", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
@@ -241,7 +315,20 @@ namespace Carrom
                 List<int> score = new List<int> { 0, 0 };
                 Score scores = new Score(score);
                 PrintScore(1, 2,scores);
-                //InitializeGame(player1Name, player2Name, databaseChoice);   
+                this.game.InitializeGame(NamePlayer1TextBox.Text, NamePlayer2TextBox.Text);
+                UpdatePlayerNames();
+                UpdatePlayerColors();
+                PopulateComboBoxes();
+                DrawBoard();
+                PlayTurnButton.IsEnabled = false;
+                if (Probability1RadioButton.IsChecked == true)
+                {
+                    this.game.SetProbabilityMode(1); // Setting mode to fixed probability of 1
+                }
+                else if (RealisticProbabilityRadioButton.IsChecked == true)
+                {
+                    this.game.SetProbabilityMode(2); // Setting mode to realistic probability
+                }
             }
             else
             {
@@ -406,8 +493,7 @@ namespace Carrom
             {
                 mariaDb.createUser(NamePlayerNPTextBox.Text, MdpPlayerNPTextBox.Text);
                 ConfigGridNP.Visibility = Visibility.Collapsed;
-                ConfigGridP1.Visibility = Visibility.Visible;
-                //InitializeGame(player1Name, player2Name, databaseChoice);   
+                ConfigGridP1.Visibility = Visibility.Visible;   
             }
             else
             {
@@ -455,6 +541,11 @@ namespace Carrom
         private void bestScoreP2(object sender, RoutedEventArgs e)
         {
             DisplayBestScore(NamePlayer2TextBox.Text);
+        }
+        private void UpdatePlayerColors()
+        {
+            Player1Color.Text = $"{NamePlayer1TextBox.Text}'s Color: White";
+            Player2Color.Text = $"{NamePlayer2TextBox.Text}'s Color: Black";
         }
     }
 }

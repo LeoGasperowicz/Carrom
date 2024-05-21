@@ -13,49 +13,33 @@ namespace Carrom
     {
         private List<int> scores;
 
-
-        private int queenScorer = -1;
-
-        private bool queenScoreNeedsValidation = false;
-
+        public List<int> Scores 
+        {
+            get { return this.scores; }
+            set { this.scores = value; }
+        }
         public Score(List<int> scores)
         {
             this.scores = scores;
         }
 
-        public void UpdateScore(int currentPlayerId, Pawn piece, Color currentPlayerColor)
+        public void UpdateScore(int currentPlayerId, CarromPiece piece, Color currentPlayerColor)
         {
             if (piece.Color == Colors.Red)
             {
-                queenScorer = currentPlayerId;
-                queenScoreNeedsValidation = true; 
+                this.scores[currentPlayerId] += 5;
             }
-            else if (piece.Color == currentPlayerColor) 
+            else if (piece.Color == currentPlayerColor)
             {
-                // Condition to verify if another pawn has been score just after the queen
-                if (queenScorer == currentPlayerId && queenScoreNeedsValidation)
-                {
-                    this.scores[currentPlayerId] += 5; 
-                    queenScoreNeedsValidation = false; 
-                }
                 this.scores[currentPlayerId]++;
             }
-            else 
+            else
             {
-                int opponentId = 1 - currentPlayerId; 
+                int opponentId = (currentPlayerId == 0) ? 1 : 0;
                 this.scores[opponentId]++;
             }
         }
 
-        // Method to reset the point if not any pawn has been score after score with the queen
-        public void ValidateQueenScore()
-        {
-            if (queenScoreNeedsValidation)
-            {
-                queenScoreNeedsValidation = false;
-                queenScorer = -1; 
-            }
-        }
 
         public int GetScoreById(int playerId)
         {
