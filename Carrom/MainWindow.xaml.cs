@@ -48,8 +48,8 @@ namespace Carrom
         private void PopulateComboBoxes()
         {
             var allPawns = this.game.Player1.Pieces.Concat(this.game.Player2.Pieces)
-            .Where(p => p.InGame)
-            .ToList();
+                .Where(p => p.InGame)
+                .ToList();
 
             allPawns.Add(this.game.Queen);
 
@@ -61,8 +61,8 @@ namespace Carrom
             PawnComboBox.SelectedValuePath = "Value";
 
             HoleComboBox.ItemsSource = this.game.Board.Holes
-            .Select(h => new { Display = $"Hole {h.Number}", Value = h })
-            .ToList();
+                .Select(h => new { Display = $"Hole {h.Number}", Value = h })
+                .ToList();
 
             HoleComboBox.DisplayMemberPath = "Display";
             HoleComboBox.SelectedValuePath = "Value";
@@ -185,11 +185,16 @@ namespace Carrom
 
         private void HoleComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            this.selectedHole = HoleComboBox.SelectedItem as Hole;
+            if (HoleComboBox.SelectedValue != null)
+            {
+                this.selectedHole = (Hole)HoleComboBox.SelectedValue;
+            }
         }
 
         private void PlayTurnButton_Click(object sender, RoutedEventArgs e)
         {
+            Pawn testPawn = this.selectedPawn;
+            Hole testhole = this.selectedHole;
             if (this.selectedPawn != null && this.selectedHole != null)
             {
                 this.game.PlayTurn(this.selectedPawn, this.selectedHole);
