@@ -193,8 +193,6 @@ namespace Carrom
 
         private void PlayTurnButton_Click(object sender, RoutedEventArgs e)
         {
-            Pawn testPawn = this.selectedPawn;
-            Hole testhole = this.selectedHole;
             if (this.selectedPawn != null && this.selectedHole != null)
             {
                 this.game.PlayTurn(this.selectedPawn, this.selectedHole);
